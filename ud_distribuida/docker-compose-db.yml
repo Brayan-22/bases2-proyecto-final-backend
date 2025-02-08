@@ -1,0 +1,50 @@
+services:
+  central-db:
+    image: postgres:latest
+    container_name: chapinero-db
+    environment:
+      POSTGRES_USER: chapinero
+      POSTGRES_PASSWORD: chapinero
+      POSTGRES_DB: chapinero
+    ports:
+      - "5432:5432"
+    volumes:
+      - chapinero-data:/var/lib/postgresql/data
+      - ./init-scripts/chapinero/crebas_ud_partitioned_central.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_central.sql
+    networks:
+      - ud-distribuida
+  macarena-db:
+    image: postgres:latest
+    container_name: macarena-db
+    environment:
+      POSTGRES_USER: macarena
+      POSTGRES_PASSWORD: macarena
+      POSTGRES_DB: macarena
+    ports:
+        - "5433:5432"
+    volumes:
+      - macarena-data:/var/lib/postgresql/data
+      - ./init-scripts/macarena/crebas_ud_partitioned_sedes.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_sedes.sql
+    networks:
+      - ud-distribuida
+  cbolivar:
+    image: postgres:latest
+    container_name: cbolivar-db
+    environment:
+      POSTGRES_USER: cbolivar
+      POSTGRES_PASSWORD: cbolivar
+      POSTGRES_DB: cbolivar
+    ports:
+      - "5434:5432"
+    volumes:
+      - cbolivar-data:/var/lib/postgresql/data
+      - ./init-scripts/cbolivar/crebas_ud_partitioned_sedes.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_sedes.sql
+    networks:
+      - ud-distribuida
+networks:
+    ud-distribuida:
+        driver: bridge
+volumes:
+  chapinero-data:
+  macarena-data:
+  cbolivar-data:

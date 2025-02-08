@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: discovery-service
+eureka:
+  server:
+    peer-node-connection-idle-timeout-seconds: 60
+    peer-node-connect-timeout-ms: 2000
+    peer-node-read-timeout-ms: 2000
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  instance:
+    hostname: ${HOSTNAME:localhost}
+server:
+  port: 8761
