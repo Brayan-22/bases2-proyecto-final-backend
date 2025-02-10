@@ -25,7 +25,7 @@ public class CreateProfesorRequestDto {
     private String telefono;
     @NotNull
     private ClasificacionEnum clasificacion;
-
-    @Positive
-    private Integer codPregrado;
+    @NotBlank
+    @Size(min = 36, max = 36)
+    private String codPregrado;
 }

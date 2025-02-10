@@ -40,7 +40,7 @@ public class DictarService implements IDictarService {
         dictar.setHoraSemDictar(requestDto.getHorasSemana());
         dictarRepository.save(dictar);
         return new DictarResponseDto(grupo.getId().getCodGrupo(),
-                grupo.getId().getPeriodoGrupo(), grupo.getCodAsignatura().getNombreAsignatura(), profesor.getCorreoProfesor());
+                grupo.getId().getPeriodoGrupo(), grupo.getAsignatura().getNombreAsignatura(), profesor.getCorreoProfesor());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class DictarService implements IDictarService {
                 .map(d -> new DictarResponseDto(
                         d.getGrupo().getId().getCodGrupo(),
                         d.getGrupo().getId().getPeriodoGrupo(),
-                        d.getGrupo().getCodAsignatura().getNombreAsignatura(),
+                        d.getGrupo().getAsignatura().getNombreAsignatura(),
                         d.getDocProfesor().getCorreoProfesor()
                 )).toList();
         if (dictarList.isEmpty()) throw new DictarNotFoundException("No se encontraron dictados");
@@ -71,7 +71,7 @@ public class DictarService implements IDictarService {
         dictar.setHoraSemDictar(requestDto.getHorasSemana());
         dictarRepository.save(dictar);
         return new DictarResponseDto(grupo.getId().getCodGrupo(),
-                grupo.getId().getPeriodoGrupo(), grupo.getCodAsignatura().getNombreAsignatura(), profesor.getCorreoProfesor());
+                grupo.getId().getPeriodoGrupo(), grupo.getAsignatura().getNombreAsignatura(), profesor.getCorreoProfesor());
     }
 
     @Override

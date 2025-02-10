@@ -32,7 +32,7 @@ public class PregradoController {
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<PregradoResponseDto>> getPregradoById(@PathVariable Integer id){
+    public Mono<ResponseEntity<PregradoResponseDto>> getPregradoById(@PathVariable String id){
         return Mono.just(ResponseEntity.ok(pregradoService.getPregradoById(id)));
     }
 
@@ -42,13 +42,13 @@ public class PregradoController {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<String>> deletePregrado(@PathVariable Integer id){
+    public Mono<ResponseEntity<String>> deletePregrado(@PathVariable String id){
         pregradoService.deletePregrado(id);
         return Mono.just(ResponseEntity.ok("Pregrado eliminado"));
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<PregradoResponseDto>> updatePregrado(@PathVariable Integer id, @Valid @RequestBody UpdatePregradoRequestDto requestDto){
+    public Mono<ResponseEntity<PregradoResponseDto>> updatePregrado(@PathVariable String id, @Valid @RequestBody UpdatePregradoRequestDto requestDto){
         return Mono.just(ResponseEntity.ok(pregradoService.updatePregrado(id, requestDto)));
     }
 }

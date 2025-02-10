@@ -15,13 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePregradoRequestDto {
-    @Min(1)
-    private Integer codPregrado;
+    private String codPregrado;
     @Size(max = 32)
     @NotBlank
     private String nombre;
     @Min(1)
-    private Integer creditos;
+    private Short creditos;
     @Min(1)
     private Double notaMinima;
     @Email

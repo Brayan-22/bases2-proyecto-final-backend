@@ -1,50 +1,41 @@
 package dev.alejandro.sedeservice.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "pregrado")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = "Pregrado")
+@Table(name = "\"pregrado\"")
 public class Pregrado implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "cod_pregrado")
-    private Integer codPregrado;
-
-    @Size(max = 32)
-    @NotNull
-    @Column(name = "nombre_pregrado", nullable = false, length = 32)
+    private String codPregrado;
+    @Column(name = "nombre_pregrado")
     private String nombre;
-
-    @NotNull
-    @Column(name = "creditos_pregrado", nullable = false)
-    private Integer creditosPregrado;
-
-    @NotNull
-    @Column(name = "nota_minima", nullable = false, precision = 3, scale = 2)
+    @Column(name = "creditos_pregrado")
+    private Short creditos;
+    @Column(name = "nota_minima")
     private Double notaMinima;
-
-    @Size(max = 64)
-    @NotNull
-    @Column(name = "correo_pregrado", nullable = false, length = 64)
-    private String correoPregrado;
-
-    @NotNull
+    @Column(name = "correo_pregrado")
+    private String correo;
     @Enumerated(EnumType.STRING)
-    @Column(name = "sede", nullable = false, length = 32)
+    @Column(name = "sede")
     private SedeEnum sede;
+    @OneToMany(mappedBy = "codPregrado",cascade = {CascadeType.ALL}, fetch = FetchType.LAZY,orphanRemoval = true)
+    private Set<Asignatura> asignaturas = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "pregrado", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Asignatura> asignaturas;
+    @OneToMany(mappedBy = "pregrado",cascade = {CascadeType.ALL}, fetch = FetchType.LAZY,orphanRemoval = true)
+    private Set<Profesor> profesores = new LinkedHashSet<>();
+
 }

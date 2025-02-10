@@ -1,0 +1,96 @@
+services:
+  discovery-service:
+    image: discovery-ud:latest
+    container_name: discovery-ud
+    ports:
+      - "8761:8761"
+    networks:
+      - app-ud
+    environment:
+      HOSTNAME: discovery-ud
+    hostname: discovery-ud
+  config-server:
+    image: config-ud:latest
+    container_name: config-ud
+    expose:
+      - "9196"
+    environment:
+      PORT: 9196
+      EUREKA_URI: http://discovery-ud:8761/eureka/
+      HOSTNAME: config-ud
+    hostname: config-ud
+    networks:
+      - app-ud
+  chapinero-service:
+    image: central-ud:latest
+    container_name: chapinero-ud
+    expose:
+      - "8090"
+    environment:
+      DB_URL: jdbc:postgresql://chapinero-db:5432/chapinero
+      DB_USER: chapinero
+      DB_PASS: chapinero
+      EUREKA_URL: http://discovery-ud:8761/eureka/
+      CONFIG_SERVER_URL: http://config-ud:9196
+      HOSTNAME: chapinero-ud
+      KAFKA_URL: kafka:9092
+    hostname: chapinero-ud
+    networks:
+      - app-ud
+      - ud-distribuida
+  macarena-service:
+    image: sede-ud:latest
+    container_name: macarena-ud
+    expose:
+      - "8091"
+    environment:
+      APP_NAME: macarena-service
+      DB_URL: jdbc:postgresql://macarena-db:5432/macarena
+      DB_USER: macarena
+      DB_PASS: macarena
+      EUREKA_URL: http://discovery-ud:8761/eureka/
+      CONFIG_SERVER_URL: http://config-ud:9196
+      HOSTNAME: macarena-ud
+      PORT: 8091
+      BASE_PATH: macarena
+      KAFKA_URL: kafka:9092
+    networks:
+      - app-ud
+      - ud-distribuida
+  cbolivar-service:
+    image: sede-ud:latest
+    container_name: cbolivar-ud
+    expose:
+      - "8092"
+    environment:
+      APP_NAME: cbolivar-service
+      DB_URL: jdbc:postgresql://cbolivar-db:5432/cbolivar
+      DB_USER: cbolivar
+      DB_PASS: cbolivar
+      EUREKA_URL: http://discovery-ud:8761/eureka/
+      CONFIG_SERVER_URL: http://config-ud:9196
+      HOSTNAME: cbolivar-ud
+      PORT: 8092
+      BASE_PATH: cbolivar
+      KAFKA_URL: kafka:9092
+    networks:
+      - app-ud
+      - ud-distribuida
+  apigateway:
+    image: apigateway-ud:latest
+    container_name: apigateway-ud
+    ports:
+      - "8081:8080"
+    environment:
+      EUREKA_URL: http://discovery-ud:8761/eureka/
+      CONFIG_SERVER_URL: http://config-ud:9196
+      HOSTNAME: apigateway-ud
+      PORT: 8080
+    networks:
+      - app-ud
+    hostname: apigateway-ud
+networks:
+  app-ud:
+    external: true
+  ud-distribuida:
+    external: true

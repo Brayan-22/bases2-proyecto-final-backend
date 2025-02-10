@@ -27,6 +27,6 @@ public class CreateProfesorRequestDto {
     @NotNull
     private ClasificacionEnum clasificacion;
 
-    @Positive
-    private Integer codPregrado;
+    @NotBlank
+    private String codPregrado;
 }

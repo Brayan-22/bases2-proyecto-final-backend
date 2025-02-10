@@ -19,7 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GrupoId implements Serializable {
-    private static final long serialVersionUID = 3344875604694507072L;
+    private static final long serialVersionUID = 7317928704039338103L;
     @Size(max = 10)
     @NotNull
     @Column(name = "cod_grupo", nullable = false, length = 10)

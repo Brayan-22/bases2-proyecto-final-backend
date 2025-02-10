@@ -2,14 +2,68 @@ spring:
   application:
     name: apigateway
   config:
-    import: optional:configserver:http://localhost:9196
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:9196}
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns:
+              - "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30s
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: CHAPINERO-SERVICE
+          uri: lb://CHAPINERO-SERVICE
+          predicates:
+            - Path=/chapinero/**, /chapinero/v3/api-docs
+        - id: MACARENA-SERVICE
+          uri: lb://MACARENA-SERVICE
+          predicates:
+            - Path=/macarena/**, /macarena/v3/api-docs
+        - id: CBOLIVAR-SERVICE
+          uri: lb://CBOLIVAR-SERVICE
+          predicates:
+            - Path=/cbolivar/**, /cbolivar/v3/api-docs
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
   instance:
     hostname: ${HOSTNAME:localhost}
 server:
-  port: 8080
+  port: ${PORT:8080}
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway service
+      - url: /chapinero/v3/api-docs
+        name: Chapinero service
+      - url: /macarena/v3/api-docs
+        name: Macarena service
+      - url: /cbolivar/v3/api-docs
+        name: Cbolivar service
+    urls-primary-name: API Gateway service

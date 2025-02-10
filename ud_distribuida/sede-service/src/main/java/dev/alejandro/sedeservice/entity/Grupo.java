@@ -1,5 +1,6 @@
 package dev.alejandro.sedeservice.entity;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -21,6 +22,8 @@ public class Grupo {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "cod_asignatura", nullable = false)
-    private Asignatura codAsignatura;
+    private Asignatura asignatura;
+
+
 
 }

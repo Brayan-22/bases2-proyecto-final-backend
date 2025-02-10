@@ -1,11 +1,11 @@
 spring:
   application:
-    name: ${APP_NAME}
+    name: ${APP_NAME:MACARENA-SERVICE}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/macarena}
+    username: ${DB_USER:macarena}
+    password: ${DB_PASS:macarena}
     hikari:
       maximum-pool-size: 5
       minimum-idle: 1
@@ -23,9 +23,26 @@ spring:
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:9196}
   webflux:
-    base-path: /chapinero
+    base-path: /${BASE_PATH:macarena}
+
+  cloud:
+    function:
+      definition: profesorSupplier;pregradoSupplier;centralEventConsumer
+    stream:
+      bindings:
+        profesorSupplier-out-0:
+          destination: profesor-event
+          content-type: application/json
+        centralEventConsumer-in-0:
+          destination: central-response
+          content-type: application/json
+        pregradoSupplier-out-0:
+          destination: pregrado-event
+          content-type: application/json
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:http://localhost:29092}
 server:
-  port: 9091
+  port: ${PORT:8091}
 eureka:
   client:
     fetch-registry: true

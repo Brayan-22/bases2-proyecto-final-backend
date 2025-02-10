@@ -37,6 +37,7 @@ public class ProfesorService implements IProfesorService {
         Profesor profeEntity = new Profesor();
         DetallesProfesor detallesProfesor = DetallesProfesor
                 .builder()
+                .docProfesor(profesor.getDocProfesor())
                 .profesor(profeEntity)
                 .direccionProfesor(profesor.getDireccion())
                 .telefonoProfesor(profesor.getTelefono())
@@ -56,13 +57,15 @@ public class ProfesorService implements IProfesorService {
         return new ProfesorResponseDto(profeEntity.getDocProfesor(),
                 profeEntity.getNombreProfesor(),
                 profeEntity.getApellidoProfesor(),
-                profeEntity.getCorreoProfesor());
+                profeEntity.getCorreoProfesor(),
+                profeEntity.getClasificacion().getNomClasificacion(),
+                profeEntity.getPregrado().getCodPregrado());
     }
 
     @Override
     public List<ProfesorResponseDto> findAll() throws ProfesorNotFoundException {
         List<ProfesorResponseDto> profesores = profesorRepository.findAll().stream()
-                .map(p -> new ProfesorResponseDto(p.getDocProfesor(), p.getNombreProfesor(), p.getApellidoProfesor(), p.getCorreoProfesor()))
+                .map(p -> new ProfesorResponseDto(p.getDocProfesor(), p.getNombreProfesor(), p.getApellidoProfesor(), p.getCorreoProfesor(),p.getClasificacion().getNomClasificacion(),p.getPregrado().getCodPregrado()))
                 .toList();
         if (profesores.isEmpty()) throw new ProfesorNotFoundException("No hay profesores registrados");
         return profesores;
@@ -71,7 +74,7 @@ public class ProfesorService implements IProfesorService {
     @Override
     public ProfesorResponseDto findById(String id) throws ProfesorNotFoundException {
         return profesorRepository.findById(id)
-                .map(p -> new ProfesorResponseDto(p.getDocProfesor(), p.getNombreProfesor(), p.getApellidoProfesor(), p.getCorreoProfesor()))
+                .map(p -> new ProfesorResponseDto(p.getDocProfesor(), p.getNombreProfesor(), p.getApellidoProfesor(), p.getCorreoProfesor(),p.getClasificacion().getNomClasificacion(),p.getPregrado().getCodPregrado()))
                 .orElseThrow(() -> new ProfesorNotFoundException("No se encontro el profesor"));
     }
 
@@ -91,9 +94,10 @@ public class ProfesorService implements IProfesorService {
         return new ProfesorResponseDto(profesorEntity.getDocProfesor(),
                 profesorEntity.getNombreProfesor(),
                 profesorEntity.getApellidoProfesor(),
-                profesorEntity.getCorreoProfesor());
+                profesorEntity.getCorreoProfesor(),
+                profesorEntity.getClasificacion().getNomClasificacion(),
+                profesorEntity.getPregrado().getCodPregrado());
     }
-
     @Transactional
     @Override
     public void delete(String id) throws ProfesorNotFoundException {
@@ -105,9 +109,13 @@ public class ProfesorService implements IProfesorService {
     public ProfesorResponseDto findByCorreoInstitucional(String correoInstitucional) throws ProfesorNotFoundException {
         Profesor profesor = profesorRepository.findProfesorByCorreoProfesor(correoInstitucional)
                 .orElseThrow(() -> new ProfesorNotFoundException("No se encontro el profesor"));
-        return new ProfesorResponseDto(profesor.getDocProfesor(), profesor.getNombreProfesor(), profesor.getApellidoProfesor(), profesor.getCorreoProfesor());
+        return new ProfesorResponseDto(profesor.getDocProfesor(),
+                profesor.getNombreProfesor(),
+                profesor.getApellidoProfesor(),
+                profesor.getCorreoProfesor(),
+                profesor.getClasificacion().getNomClasificacion(),
+                profesor.getPregrado().getCodPregrado());
     }
-
 }
 
 

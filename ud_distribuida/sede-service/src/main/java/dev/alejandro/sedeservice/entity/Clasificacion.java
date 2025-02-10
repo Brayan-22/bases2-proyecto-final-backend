@@ -1,13 +1,8 @@
 package dev.alejandro.sedeservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -15,11 +10,14 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "clasificacion")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Clasificacion {
     @Id
-    @Size(max = 32)
     @Column(name = "nom_clasificacion", nullable = false, length = 32)
-    private String nomClasificacion;
+    @Enumerated(EnumType.STRING)
+    private ClasificacionEnum nomClasificacion;
 
     @NotNull
     @Column(name = "max_horas_clas", nullable = false)

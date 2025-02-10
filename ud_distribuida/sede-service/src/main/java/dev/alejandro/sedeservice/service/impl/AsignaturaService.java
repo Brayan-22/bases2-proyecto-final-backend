@@ -33,7 +33,7 @@ public class AsignaturaService implements IAsignaturaService {
                             ae.getHorasSemAsignatura(),
                             ae.getEstudMaxAsignatura(),
                             ae.getSemestreAsignatura(),
-                            ae.getPregrado().getNombre()
+                            ae.getCodPregrado().getNombre()
                     );
                 }).toList();
         if (asignaturas.isEmpty()) throw new AsignaturaNotFoundException("No se encontraron asignaturas");
@@ -49,7 +49,7 @@ public class AsignaturaService implements IAsignaturaService {
                         ae.getHorasSemAsignatura(),
                         ae.getEstudMaxAsignatura(),
                         ae.getSemestreAsignatura(),
-                        ae.getPregrado().getNombre()
+                        ae.getCodPregrado().getNombre()
                 )).orElseThrow(() -> new AsignaturaNotFoundException("Asignatura no encontrada"));
     }
 
@@ -65,7 +65,7 @@ public class AsignaturaService implements IAsignaturaService {
         asignaturaEntity.setHorasSemAsignatura(asignatura.getHorasSemanales());
         asignaturaEntity.setEstudMaxAsignatura(asignatura.getMaxEstudiantes());
         asignaturaEntity.setSemestreAsignatura(asignatura.getSemestre());
-        asignaturaEntity.setPregrado(pregradoRepository.findByNombreContainsIgnoreCase(asignatura.getPregrado())
+        asignaturaEntity.setCodPregrado(pregradoRepository.findByNombreContainsIgnoreCase(asignatura.getPregrado())
                 .orElseThrow(() -> new AsignaturaNotCreatedException("Pregrado no encontrado")));
         asignaturaRepository.save(asignaturaEntity);
         return new AsignaturaResponseDto(
@@ -74,7 +74,7 @@ public class AsignaturaService implements IAsignaturaService {
                 asignaturaEntity.getHorasSemAsignatura(),
                 asignaturaEntity.getEstudMaxAsignatura(),
                 asignaturaEntity.getSemestreAsignatura(),
-                asignaturaEntity.getPregrado().getNombre()
+                asignaturaEntity.getCodPregrado().getNombre()
         );
     }
 
@@ -87,7 +87,7 @@ public class AsignaturaService implements IAsignaturaService {
         asignaturaEntity.setHorasSemAsignatura(asignatura.getHorasSemanales());
         asignaturaEntity.setEstudMaxAsignatura(asignatura.getMaxEstudiantes());
         asignaturaEntity.setSemestreAsignatura(asignatura.getSemestre());
-        asignaturaEntity.setPregrado(pregradoRepository.findByNombreContainsIgnoreCase(asignatura.getPregrado())
+        asignaturaEntity.setCodPregrado(pregradoRepository.findByNombreContainsIgnoreCase(asignatura.getPregrado())
                 .orElseThrow(() -> new AsignaturaNotCreatedException("Pregrado no encontrado")));
         asignaturaRepository.saveAndFlush(asignaturaEntity);
         return new AsignaturaResponseDto(
@@ -96,7 +96,7 @@ public class AsignaturaService implements IAsignaturaService {
                 asignaturaEntity.getHorasSemAsignatura(),
                 asignaturaEntity.getEstudMaxAsignatura(),
                 asignaturaEntity.getSemestreAsignatura(),
-                asignaturaEntity.getPregrado().getNombre()
+                asignaturaEntity.getCodPregrado().getNombre()
         );
     }
 
@@ -116,7 +116,7 @@ public class AsignaturaService implements IAsignaturaService {
                         ae.getHorasSemAsignatura(),
                         ae.getEstudMaxAsignatura(),
                         ae.getSemestreAsignatura(),
-                        ae.getPregrado().getNombre()
+                        ae.getCodPregrado().getNombre()
                 )).toList();
         if (asignaturas.isEmpty()) throw new AsignaturaNotFoundException("No se encontraron asignaturas");
         return asignaturas;
@@ -134,7 +134,7 @@ public class AsignaturaService implements IAsignaturaService {
                         ae.getHorasSemAsignatura(),
                         ae.getEstudMaxAsignatura(),
                         ae.getSemestreAsignatura(),
-                        ae.getPregrado().getNombre()
+                        ae.getCodPregrado().getNombre()
                 )).toList();
         if (asignaturas.isEmpty()) throw new AsignaturaNotFoundException("No se encontraron asignaturas");
         return asignaturas;

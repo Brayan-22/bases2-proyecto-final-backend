@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PregradoResponseDto {
-    private Integer codPregrado;
+    private String codPregrado;
     private String nombrePregrado;
-    private Integer creditos;
+    private Short creditos;
     private Double notaMinima;
     private String correo;
 }

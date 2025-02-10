@@ -69,7 +69,7 @@ drop table if exists nomina_profesor;
 
 create table Asignatura (
    cod_asignatura       INT8                 not null,
-   cod_pregrado         INT4                 not null,
+   cod_pregrado         varchar(36)                 not null,
    nombre_asignatura    VARCHAR(32)          not null,
    horas_sem_asignatura INT2                 not null,
    estud_max_asignatura INT2                 not null,
@@ -131,7 +131,7 @@ doc_profesor
 
 create table Estudiante (
    cod_estudiante       VARCHAR(10)          not null,
-   cod_pregrado         INT4                 not null,
+   cod_pregrado         varchar(36)                 not null,
    nombres_estudiante   VARCHAR(32)          not null,
    apellidos_estudiante VARCHAR(32)          not null,
    correo_estudianti    VARCHAR(64)          not null,
@@ -169,12 +169,12 @@ cod_asignatura
 
 
 create table Pregrado (
-   cod_pregrado         INT4                 not null,
+   cod_pregrado         varchar(36)                 not null,
    nombre_pregrado      VARCHAR(32)          not null,
    creditos_pregrado    INT2                 not null,
-   nota_minima          NUMERIC(3,2)         not null,
+   nota_minima          double precision        not null,
    correo_pregrado      VARCHAR(64)          not null,
-   sede                 VARCHAR(32)          not null,
+   sede                 VARCHAR(32) CHECK ( sede IN ('CHAPINERO','MACARENA','CIUDADBOLIVAR'))         not null,
    constraint PK_PREGRADO primary key (cod_pregrado)
 );
 
@@ -190,9 +190,8 @@ create table Profesor (
    nombre_profesor      VARCHAR(32)          not null,
    apellido_profesor    VARCHAR(32)          not null,
    correo_profesor      VARCHAR(64)          not null,
-    cod_pregrado        INT4                 not null,
-   constraint PK_PROFESOR primary key (doc_profesor),
-
+    cod_pregrado        varchar(36)                not null,
+   constraint PK_PROFESOR primary key (doc_profesor)
 );
 
 
@@ -360,3 +359,84 @@ alter table nomina_profesor
       references nomina (id_nomina)
       on delete restrict on update restrict;
 
+insert into clasificacion (nom_clasificacion, max_horas_clas, sueldo_clasificacion) values
+('PLANTA', 40, 3000000),
+('CONTRATACION_ESPECIAL', 20, 2000000);
+
+
+-- Trigger para habilitar la eliminacion por evento kafka
+CREATE FUNCTION set_kafka_update() RETURNS void AS
+$$
+BEGIN
+    PERFORM set_config('app.kafka_update', 'true', false);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger para deshabilitar la eliminacion por evento kafka
+CREATE FUNCTION unset_kafka_update() RETURNS void AS
+$$
+BEGIN
+    PERFORM set_config('app.kafka_update', 'false', false);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION prevent_update_profesor()
+    RETURNS TRIGGER AS $$
+DECLARE
+    sede_profesor VARCHAR(36);
+    kafka_update_enabled BOOLEAN;
+BEGIN
+    kafka_update_enabled := current_setting('app.kafka_update', true) = 'true';
+    IF TG_OP IN ('INSERT', 'UPDATE') THEN
+        -- Get sede for new record
+        SELECT sede INTO sede_profesor
+        FROM Pregrado
+        WHERE cod_pregrado = NEW.cod_pregrado;
+
+        -- Block if not Chapinero and not kafka update
+        IF sede_profesor <> 'CHAPINERO' AND NOT kafka_update_enabled THEN
+            RAISE EXCEPTION 'No se puede modificar profesor en sede diferente a CHAPINERO';
+        END IF;
+        RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+        -- Get sede for existing record
+        SELECT sede INTO sede_profesor
+        FROM Pregrado
+        WHERE cod_pregrado = OLD.cod_pregrado;
+
+        IF sede_profesor <> 'CHAPINERO' AND NOT kafka_update_enabled THEN
+            RAISE EXCEPTION 'No se puede eliminar profesor en sede diferente a CHAPINERO';
+        END IF;
+        RETURN OLD;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_profesor_update
+    BEFORE INSERT OR UPDATE OR DELETE ON Profesor
+    FOR EACH ROW EXECUTE FUNCTION prevent_update_profesor();
+
+CREATE OR REPLACE FUNCTION prevent_update_pregrado()
+    RETURNS TRIGGER AS $$
+DECLARE
+    kafka_update_enabled BOOLEAN;
+BEGIN
+    kafka_update_enabled := current_setting('app.kafka_update', true) = 'true';
+
+    IF TG_OP = 'INSERT' THEN
+        IF NEW.sede <> 'CHAPINERO' AND NOT kafka_update_enabled THEN
+            RAISE EXCEPTION 'No se puede crear pregrado en sede diferente a CHAPINERO';
+        END IF;
+        RETURN NEW;
+    ELSIF TG_OP IN ('UPDATE', 'DELETE') THEN
+        IF OLD.sede <> 'CHAPINERO' AND NOT kafka_update_enabled THEN
+            RAISE EXCEPTION 'No se puede modificar pregrado en sede diferente a CHAPINERO';
+        END IF;
+        RETURN (CASE TG_OP WHEN 'DELETE' THEN OLD ELSE NEW END);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_pregrado_update
+    BEFORE INSERT OR UPDATE OR DELETE ON Pregrado
+    FOR EACH ROW EXECUTE FUNCTION prevent_update_pregrado();

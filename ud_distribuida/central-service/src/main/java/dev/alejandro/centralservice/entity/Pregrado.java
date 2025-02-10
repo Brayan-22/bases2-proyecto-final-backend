@@ -20,11 +20,11 @@ public class Pregrado implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "cod_pregrado")
-    private Integer codPregrado;
+    private String codPregrado;
     @Column(name = "nombre_pregrado")
     private String nombre;
     @Column(name = "creditos_pregrado")
-    private Integer creditos;
+    private Short creditos;
     @Column(name = "nota_minima")
     private Double notaMinima;
     @Column(name = "correo_pregrado")

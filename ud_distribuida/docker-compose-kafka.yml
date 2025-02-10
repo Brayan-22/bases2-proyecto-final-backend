@@ -8,14 +8,16 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - ud-distribuida-events
+      - ud-distribuida
+    hostname: zookeeper
   kafka:
     image: confluentinc/cp-kafka:7.4.4
     container_name: kafka
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
+    hostname: kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -24,7 +26,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - ud-distribuida-events
+      - ud-distribuida
 networks:
-    ud-distribuida-events:
-        driver: bridge
+    ud-distribuida:
+        external: true

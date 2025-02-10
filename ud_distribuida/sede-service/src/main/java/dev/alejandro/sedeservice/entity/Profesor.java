@@ -1,16 +1,23 @@
 package dev.alejandro.sedeservice.entity;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "profesor")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Profesor {
     @Id
     @Size(max = 10)
@@ -35,7 +42,6 @@ public class Profesor {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "profesor")
     private DetallesProfesor detallesProfesor;
 
-
     @ManyToOne(optional = false,cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "nom_clasificacion", nullable = false)
     private Clasificacion clasificacion;
@@ -43,6 +49,5 @@ public class Profesor {
     @ManyToOne(optional = false,cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "cod_pregrado")
     private Pregrado pregrado;
-
 
 }

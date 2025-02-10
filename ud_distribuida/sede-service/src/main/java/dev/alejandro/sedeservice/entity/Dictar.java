@@ -31,5 +31,5 @@ public class Dictar {
     @NotNull
     @Column(name = "hora_ssem_dictar", nullable = false)
     private Short horaSemDictar;
-    
+
 }

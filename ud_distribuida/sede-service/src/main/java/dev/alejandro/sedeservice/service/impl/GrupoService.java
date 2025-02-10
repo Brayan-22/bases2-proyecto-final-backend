@@ -28,7 +28,7 @@ public class GrupoService implements IGrupoService {
         Asignatura asignatura = asignaturaRepository.findById(requestDto.getCodAsignatura()).orElseThrow(() -> new GrupoNotCreatedException("La asignatura no existe"));
         Grupo grupo = Grupo.builder()
                 .id(new GrupoId(requestDto.getCodGrupo(), requestDto.getPeriodoGrupo()))
-                .codAsignatura(asignatura)
+                .asignatura(asignatura)
                 .build();
         grupoRepository.save(grupo);
         return new GrupoResponseDto(grupo.getId().getCodGrupo(), grupo.getId().getPeriodoGrupo(),asignatura.getNombreAsignatura());
@@ -37,7 +37,7 @@ public class GrupoService implements IGrupoService {
     @Override
     public List<GrupoResponseDto> findAll() {
         List<GrupoResponseDto> grupos = grupoRepository.findAll().stream()
-                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(), g.getId().getPeriodoGrupo(), g.getCodAsignatura().getNombreAsignatura()))
+                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(), g.getId().getPeriodoGrupo(), g.getAsignatura().getNombreAsignatura()))
                 .toList();
         if (grupos.isEmpty())throw new GrupoNotFoundException("No hay grupos registrados");
         return grupos;
@@ -48,7 +48,7 @@ public class GrupoService implements IGrupoService {
         List<Grupo> grupo = grupoRepository.findById_CodGrupo(codGrupo);
         if (grupo.isEmpty()) throw new GrupoNotFoundException("Grupos no encontrados");
         return grupo.stream()
-                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(),g.getId().getPeriodoGrupo(), g.getCodAsignatura().getNombreAsignatura()))
+                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(),g.getId().getPeriodoGrupo(), g.getAsignatura().getNombreAsignatura()))
                 .toList();
     }
 
@@ -57,13 +57,13 @@ public class GrupoService implements IGrupoService {
         List<Grupo> grupo = grupoRepository.findById_PeriodoGrupo(periodo);
         if (grupo.isEmpty()) throw new GrupoNotFoundException("Grupos no encontrados");
         return grupo.stream()
-                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(),g.getId().getPeriodoGrupo(), g.getCodAsignatura().getNombreAsignatura()))
+                .map(g -> new GrupoResponseDto(g.getId().getCodGrupo(),g.getId().getPeriodoGrupo(), g.getAsignatura().getNombreAsignatura()))
                 .toList();
     }
 
     @Override
     public void deleteByCodGrupo(GrupoId grupoId) throws GrupoNotFoundException {
-        grupoRepository.findById(grupoId).orElseThrow(()-> new GrupoNotFoundException("Grupo no encontrado"));
+        if (!grupoRepository.existsById(grupoId)) throw new GrupoNotFoundException("Grupo no encontrado");
         grupoRepository.deleteById(grupoId);
     }
 
@@ -73,7 +73,7 @@ public class GrupoService implements IGrupoService {
         Grupo grupoEntity = grupoRepository.findById(grupoId).orElseThrow(()-> new GrupoNotFoundException("Grupo no encontrado"));
         Asignatura asignatura = asignaturaRepository.findById(grupo.getCodAsignatura()).orElseThrow(()-> new GrupoNotFoundException("Asignatura no encontrada"));
         grupoEntity.setId(new GrupoId(grupo.getCodGrupo(),grupo.getPeriodoGrupo()));
-        grupoEntity.setCodAsignatura(asignatura);
+        grupoEntity.setAsignatura(asignatura);
         grupoRepository.save(grupoEntity);
         return new GrupoResponseDto(grupoEntity.getId().getCodGrupo(),grupoEntity.getId().getPeriodoGrupo(),asignatura.getNombreAsignatura());
     }

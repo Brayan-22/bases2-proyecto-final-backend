@@ -1,10 +1,7 @@
 package dev.alejandro.centralservice.dto;
 
 import dev.alejandro.centralservice.entity.SedeEnum;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdatePregradoRequestDto {
-    @Min(1)
-    private Integer codPregrado;
+
+    @Size(min = 36, max = 36)
+    private String codPregrado;
     @NotBlank
     private String nombre;
     @Min(1)
-    private Integer creditos;
+    private Short creditos;
     @Min(1)
     private Double notaMinima;
     @Email

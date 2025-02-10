@@ -4,18 +4,22 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class DictarId implements Serializable {
-    private static final long serialVersionUID = 5176909892148268910L;
+    @Serial
+    private static final long serialVersionUID = -7104520154037618898L;
     @Size(max = 10)
     @NotNull
     @Column(name = "doc_profesor", nullable = false, length = 10)
@@ -23,5 +27,4 @@ public class DictarId implements Serializable {
 
     @NotNull
     private GrupoId codGrupo;
-
 }

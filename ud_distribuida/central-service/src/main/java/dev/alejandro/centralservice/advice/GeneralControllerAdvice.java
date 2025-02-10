@@ -3,8 +3,10 @@ package dev.alejandro.centralservice.advice;
 import dev.alejandro.centralservice.exception.NominaNotCreatedException;
 import dev.alejandro.centralservice.exception.NominaNotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
@@ -33,5 +35,10 @@ public class GeneralControllerAdvice {
     @ExceptionHandler(NominaNotFoundException.class)
     public ResponseEntity<String> handleNominaNotFoundException(NominaNotFoundException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(JpaSystemException.class)
+    public ResponseEntity<String> handleJpaSystemException(JpaSystemException ex,@Value("${spring.application.name}") String sede){
+        return ResponseEntity.badRequest().body("Error, la sede debe ser unicamente la del servicio actual: "+sede);
     }
 }

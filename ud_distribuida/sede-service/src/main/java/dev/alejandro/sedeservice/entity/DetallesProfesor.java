@@ -35,4 +35,5 @@ public class DetallesProfesor {
     @NotNull
     @Column(name = "telefono_profesor", nullable = false, length = 10)
     private String telefonoProfesor;
+
 }

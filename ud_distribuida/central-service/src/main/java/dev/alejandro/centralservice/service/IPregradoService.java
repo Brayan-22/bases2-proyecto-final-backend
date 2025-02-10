@@ -13,8 +13,8 @@ import java.util.List;
 public interface IPregradoService {
     PregradoResponseDto createPregrado(CreatePregradoRequestDto createPregradoRequestDto) throws PregradoNotCreatedException, AsignaturaNotCreatedException;
     List<PregradoResponseDto> getAllPregrados()throws PregradoNotFoundException;
-    PregradoResponseDto getPregradoById(Integer codPregrado) throws PregradoNotFoundException;
+    PregradoResponseDto getPregradoById(String codPregrado) throws PregradoNotFoundException;
     PregradoResponseDto getPregradoByName(String nombrePregrado) throws PregradoNotFoundException;
-    PregradoResponseDto updatePregrado(Integer codPregrado, UpdatePregradoRequestDto createPregradoRequestDto) throws PregradoNotCreatedException;
-    void deletePregrado(Integer codPregrado)throws PregradoNotFoundException;
+    PregradoResponseDto updatePregrado(String codPregrado, UpdatePregradoRequestDto createPregradoRequestDto) throws PregradoNotCreatedException;
+    void deletePregrado(String codPregrado)throws PregradoNotFoundException;
 }

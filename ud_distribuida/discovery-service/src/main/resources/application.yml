@@ -3,7 +3,7 @@ spring:
     name: discovery-service
 eureka:
   server:
-    peer-node-connection-idle-timeout-seconds: 60
+    peer-node-connection-idle-timeout-seconds: 5
     peer-node-connect-timeout-ms: 2000
     peer-node-read-timeout-ms: 2000
   client:

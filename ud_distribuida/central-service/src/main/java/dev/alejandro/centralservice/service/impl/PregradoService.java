@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +31,8 @@ public class PregradoService implements IPregradoService {
             throw new PregradoNotCreatedException("Pregrado already exists");
         });
         Pregrado pregrado = new Pregrado();
-        pregrado.setCodPregrado(createPregradoRequestDto.getCodPregrado());
+
+        pregrado.setCodPregrado(UUID.randomUUID().toString());
         pregrado.setNombre(createPregradoRequestDto.getNombre());
         pregrado.setCreditos(createPregradoRequestDto.getCreditos());
         pregrado.setNotaMinima(createPregradoRequestDto.getNotaMinima());
@@ -60,7 +62,7 @@ public class PregradoService implements IPregradoService {
     }
 
     @Override
-    public PregradoResponseDto getPregradoById(Integer codPregrado) throws PregradoNotFoundException {
+    public PregradoResponseDto getPregradoById(String codPregrado) throws PregradoNotFoundException {
         Pregrado pregrado = pregradoRepository.findById(codPregrado).orElseThrow(()-> new PregradoNotFoundException("Pregrado not found"));
         return new PregradoResponseDto(pregrado.getCodPregrado(), pregrado.getNombre(), pregrado.getCreditos(), pregrado.getNotaMinima(), pregrado.getCorreo());
     }
@@ -73,7 +75,7 @@ public class PregradoService implements IPregradoService {
 
     @Transactional
     @Override
-    public PregradoResponseDto updatePregrado(Integer codPregrado, UpdatePregradoRequestDto createPregradoRequestDto) throws PregradoNotCreatedException {
+    public PregradoResponseDto updatePregrado(String codPregrado, UpdatePregradoRequestDto createPregradoRequestDto) throws PregradoNotCreatedException {
         Pregrado pregrado = pregradoRepository.findById(codPregrado).orElseThrow(()-> new PregradoNotCreatedException("Pregrado not found"));
         pregrado.setNombre(createPregradoRequestDto.getNombre());
         pregrado.setCreditos(createPregradoRequestDto.getCreditos());
@@ -85,7 +87,7 @@ public class PregradoService implements IPregradoService {
 
     @Transactional
     @Override
-    public void deletePregrado(Integer codPregrado) throws PregradoNotFoundException {
+    public void deletePregrado(String codPregrado) throws PregradoNotFoundException {
         Pregrado pregrado = pregradoRepository.findById(codPregrado).orElseThrow(()-> new PregradoNotFoundException("Pregrado not found"));
         pregradoRepository.delete(pregrado);
     }

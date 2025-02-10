@@ -1,5 +1,6 @@
 package dev.alejandro.sedeservice.entity;
 
+import dev.alejandro.sedeservice.entity.Pregrado;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,10 +19,10 @@ public class Asignatura {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "cod_pregrado", nullable = false)
-    Pregrado pregrado;
+    private Pregrado codPregrado;
 
     @Size(max = 32)
     @NotNull
@@ -39,5 +40,6 @@ public class Asignatura {
     @NotNull
     @Column(name = "semestre_asignatura", nullable = false)
     private Short semestreAsignatura;
+
 
 }
