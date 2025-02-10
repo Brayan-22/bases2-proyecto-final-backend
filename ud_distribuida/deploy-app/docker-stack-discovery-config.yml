@@ -1,0 +1,34 @@
+services: 
+  discovery-service:
+    image: brayan22/discovery-ud:latest
+    container_name: discovery-ud
+    ports:
+      - "8761:8761"
+    networks:
+      - app-ud
+    environment:
+      HOSTNAME: discovery-ud
+    hostname: discovery-ud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  config-server:
+    image: brayan22/config-ud:latest
+    container_name: config-ud
+    expose:
+      - "9196"
+    environment:
+      PORT: 9196
+      EUREKA_URI: http://discovery-ud:8761/eureka/
+      HOSTNAME: config-ud
+    hostname: config-ud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app-ud
+networks:
+  app-ud:
+    external: true

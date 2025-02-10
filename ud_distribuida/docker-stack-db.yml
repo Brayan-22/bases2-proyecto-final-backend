@@ -1,0 +1,62 @@
+services:
+  central-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: chapinero
+      POSTGRES_PASSWORD: chapinero
+      POSTGRES_DB: chapinero
+    ports:
+      - "5432:5432"
+    volumes:
+      - chapinero-data:/var/lib/postgresql/data
+      - ./init-scripts/chapinero/crebas_ud_partitioned_central.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_central.sql
+    networks:
+      - ud-distribuida
+    hostname: chapinero-db
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  macarena-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: macarena
+      POSTGRES_PASSWORD: macarena
+      POSTGRES_DB: macarena
+    hostname: macarena-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - macarena-data:/var/lib/postgresql/data
+      - ./init-scripts/macarena/crebas_ud_partitioned_sedes.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_sedes.sql
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - ud-distribuida
+  cbolivar-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: cbolivar
+      POSTGRES_PASSWORD: cbolivar
+      POSTGRES_DB: cbolivar
+    hostname: cbolivar-db
+    ports:
+      - "5434:5432"
+    volumes:
+      - cbolivar-data:/var/lib/postgresql/data
+      - ./init-scripts/cbolivar/crebas_ud_partitioned_sedes.sql:/docker-entrypoint-initdb.d/crebas_ud_partitioned_sedes.sql
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - ud-distribuida
+networks:
+    ud-distribuida:
+      external: true
+volumes:
+  chapinero-data:
+  macarena-data:
+  cbolivar-data:

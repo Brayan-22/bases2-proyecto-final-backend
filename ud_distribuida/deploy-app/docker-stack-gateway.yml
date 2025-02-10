@@ -1,0 +1,34 @@
+services:
+  apigateway:
+    image: brayan22/apigateway-ud:latest
+    container_name: apigateway-ud
+    ports:
+      - "8082:8080"
+    environment:
+      EUREKA_URL: http://discovery-ud:8761/eureka/
+      CONFIG_SERVER_URL: http://config-ud:9196
+      HOSTNAME: apigateway-ud
+      PORT: 8080
+    networks:
+      - app-ud
+    hostname: apigateway-ud
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse-proxy"
+        - "traefik.http.routers.gateway-service-ud.rule=Host(`udistritalrest.${DOMAIN}`)"
+        - "traefik.http.services.gateway-service-ud.loadbalancer.server.port=8082"
+        - "traefik.http.routers.gateway-service-ud.entrypoints=websecure"
+        - "traefik.http.routers.gateway-service-ud.tls=true"
+        - "traefik.http.routers.gateway-service-ud.service=gateway-service-ud"
+        - "traefik.http.routers.gateway-service-ud.tls.certresolver=cloudflare"
+        - "traefik.http.routers.gateway-service-ud.tls.domains[0].main=${DOMAIN}"
+        - "traefik.http.routers.gateway-service-ud.tls.domains[0].sans=*.${DOMAIN}"
+networks:
+  app-ud:
+    external: true
+  reverse-proxy:
+    external: true
