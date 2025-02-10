@@ -1,6 +1,6 @@
 services:
   discovery-service:
-    image: discovery-ud:latest
+    image: brayan22/discovery-ud:latest
     container_name: discovery-ud
     ports:
       - "8761:8761"
@@ -10,7 +10,7 @@ services:
       HOSTNAME: discovery-ud
     hostname: discovery-ud
   config-server:
-    image: config-ud:latest
+    image: brayan22/config-ud:latest
     container_name: config-ud
     expose:
       - "9196"
@@ -22,7 +22,7 @@ services:
     networks:
       - app-ud
   chapinero-service:
-    image: central-ud:latest
+    image: brayan22/central-ud:latest
     container_name: chapinero-ud
     expose:
       - "8090"
@@ -39,7 +39,7 @@ services:
       - app-ud
       - ud-distribuida
   macarena-service:
-    image: sede-ud:latest
+    image: brayan22/sede-ud:latest
     container_name: macarena-ud
     expose:
       - "8091"
@@ -58,7 +58,7 @@ services:
       - app-ud
       - ud-distribuida
   cbolivar-service:
-    image: sede-ud:latest
+    image: brayan22/sede-ud:latest
     container_name: cbolivar-ud
     expose:
       - "8092"
@@ -77,7 +77,7 @@ services:
       - app-ud
       - ud-distribuida
   apigateway:
-    image: apigateway-ud:latest
+    image: brayan22/apigateway-ud:latest
     container_name: apigateway-ud
     ports:
       - "8081:8080"
