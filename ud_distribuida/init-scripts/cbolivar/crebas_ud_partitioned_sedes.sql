@@ -299,10 +299,6 @@ alter table dictar
     add constraint FK_DICTAR_GRUPO_PRO_GRUPO foreign key (cod_grupo, periodo_grupo)
         references Grupo (cod_grupo, periodo_grupo)
         on delete restrict on update restrict;
-insert into clasificacion (nom_clasificacion, max_horas_clas, sueldo_clasificacion) values
-                                                                                        ('PLANTA', 40, 3000000),
-                                                                 ('CONTRATACION_ESPECIAL', 20, 2000000);
-
 
 -- Trigger para prevenir la inserción de pregrados y profesores fuera de la sede MACARENA
 CREATE OR REPLACE FUNCTION prevent_update_profesor()
