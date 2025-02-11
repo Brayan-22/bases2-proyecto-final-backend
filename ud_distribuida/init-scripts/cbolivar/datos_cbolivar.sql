@@ -39,19 +39,19 @@ FROM generate_series(1, 50) g;
 -- Insertar en tabla Estudiante.
 INSERT INTO Estudiante(cod_estudiante, cod_pregrado, nombres_estudiante, apellidos_estudiante, correo_estudianti)
 SELECT
-    'EST' || g,
+    'ESTCB' || g,
     'PRECB' || (1 + FLOOR(random() * 10)),
-    'NombreEst' || g,
-    'ApellidoEst' || g,
-    'estudiante' || g || '@udistrital.edu.co'
+    'NombreEstCb' || g,
+    'ApellidoEstCb' || g,
+    'estudiantecb' || g || '@udistrital.edu.co'
 FROM generate_series(1, 50) g;
 
 -- Insertar en tabla Detalle_estudiante.
 INSERT INTO Detalle_estudiante(cod_estudiante, telefono_estudiante, correo_personal_estudiante, num_documento)
 SELECT
-    'EST' || g,
+    'ESTCB' || g,
     '300' || SUBSTR('' || g || (1 + FLOOR(random() * 1000000)), 1, 7),
-    'estudiante' || g || '@gmail.com',
+    'estudiantecb' || g || '@gmail.com',
     '100' || SUBSTR('' || g || (1 + FLOOR(random() * 1000000)), 1, 7)
 FROM generate_series(1, 50) g;
 
@@ -63,25 +63,25 @@ INSERT INTO Clasificacion(nom_clasificacion, max_horas_clas, sueldo_clasificacio
 -- Insertar en tabla Profesor.
 INSERT INTO Profesor(doc_profesor, nom_clasificacion, nombre_profesor, apellido_profesor, correo_profesor, cod_pregrado)
 SELECT
-    'PROF' || g,
+    'PROFCB' || g,
     CASE WHEN (random()::int)=0 THEN 'PLANTA' ELSE 'CONTRATACION_ESPECIAL' END,
-    'NombreProf' || g,
-    'ApellidoProf' || g,
-    'profesor' || g || '@udistrital.edu.co',
+    'NombreProfCb' || g,
+    'ApellidoProfCb' || g,
+    'profesorcb' || g || '@udistrital.edu.co',
     'PRECB' || (1 + FLOOR(random() * 10))
 FROM generate_series(1, 20) g;
 
 -- Insertar en tabla Detalles_profesor.
 INSERT INTO Detalles_profesor(doc_profesor, direccion_profesor, correo_personar, telefono_profesor)
 SELECT
-    'PROF' || g,
+    'PROFCB' || g,
     (
         CASE WHEN (random()::int)=0 THEN 'Calle ' ELSE 'Carrera ' END ||
         (1 + FLOOR(random() * 100)) || ' # ' ||
         (1 + FLOOR(random() * 100)) || '-' ||
         (1 + FLOOR(random() * 100))
     ),
-    'profesor' || g || '@gmail.com',
+    'profesorcb' || g || '@gmail.com',
     '300' || SUBSTR('' || g || (1 + FLOOR(random() * 1000000)), 1, 7)
 FROM generate_series(1, 20) g;
 
@@ -100,7 +100,7 @@ INSERT INTO calificar(cod_grupo, periodo_grupo, cod_estudiante)
 SELECT DISTINCT
     gr.cod_grupo,
     '2024-01',
-    'EST' || (1 + FLOOR(random() * 50))
+    'ESTCB' || (1 + FLOOR(random() * 50))
 FROM
     Grupo gr,
     generate_series(1, 20) g;
@@ -108,7 +108,7 @@ FROM
 -- Insertar en tabla Dictar.
 WITH pk_dictar AS (
     SELECT DISTINCT
-        'PROF' || (1 + FLOOR(random() * 20)) doc_profesor,
+        'PROFCB' || (1 + FLOOR(random() * 20)) doc_profesor,
         gr.cod_grupo cod_grupo,
         '2024-01' periodo_grupo
     FROM
