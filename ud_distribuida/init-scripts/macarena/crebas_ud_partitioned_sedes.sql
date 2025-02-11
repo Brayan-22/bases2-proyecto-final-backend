@@ -1,60 +1,42 @@
-drop index if exists pregrado_asignatura_FK;
+-- Drop triggers
+DROP TRIGGER IF EXISTS trigger_profesor_update ON Profesor;
+DROP TRIGGER IF EXISTS trigger_pregrado_update ON Pregrado;
 
-drop index if exists Asignatura_PK;
+-- Drop functions (para triggers)
+DROP FUNCTION IF EXISTS prevent_update_profesor();
+DROP FUNCTION IF EXISTS prevent_update_pregrado();
 
-drop table if exists Asignatura;
+-- Drop índices
+DROP INDEX IF EXISTS pregrado_asignatura_FK;
+DROP INDEX IF EXISTS Asignatura_PK;
+DROP INDEX IF EXISTS Clasificacion_PK;
+DROP INDEX IF EXISTS Detalle_estudiante_PK;
+DROP INDEX IF EXISTS Detalles_profesor_PK;
+DROP INDEX IF EXISTS pregrado_estudiante_FK;
+DROP INDEX IF EXISTS Estudiante_PK;
+DROP INDEX IF EXISTS asignatura_grupo_FK;
+DROP INDEX IF EXISTS Grupo_PK;
+DROP INDEX IF EXISTS Pregrado_PK;
+DROP INDEX IF EXISTS profesor_clasificacion_FK;
+DROP INDEX IF EXISTS Profesor_PK;
+DROP INDEX IF EXISTS estudiante_grupo2_FK;
+DROP INDEX IF EXISTS estudiante_grupo_FK;
+DROP INDEX IF EXISTS calificar_PK;
+DROP INDEX IF EXISTS grupo_profesor_FK;
+DROP INDEX IF EXISTS grupo_profesor2_FK;
+DROP INDEX IF EXISTS dictar_PK;
 
-drop index if exists Clasificacion_PK;
-
-drop table if exists Clasificacion;
-
-drop index if exists Detalle_estudiante_PK;
-
-drop table if exists Detalle_estudiante;
-
-drop index if exists Detalles_profesor_PK;
-
-drop table if exists Detalles_profesor;
-
-drop index if exists pregrado_estudiante_FK;
-
-drop index if exists Estudiante_PK;
-
-drop table if exists Estudiante;
-
-drop index if exists asignatura_grupo_FK;
-
-drop index if exists Grupo_PK;
-
-drop table if exists Grupo;
-
-drop index if exists Pregrado_PK;
-
-drop table if exists Pregrado;
-
-drop index if exists profesor_clasificacion_FK;
-
-drop index if exists Profesor_PK;
-
-drop table if exists Profesor;
-
-drop index if exists estudiante_grupo2_FK;
-
-drop index if exists estudiante_grupo_FK;
-
-drop index if exists calificar_PK;
-
-drop table if exists calificar;
-
-drop index if exists grupo_profesor_FK;
-
-drop index if exists grupo_profesor2_FK;
-
-drop index if exists dictar_PK;
-
-drop table if exists dictar;
-
-
+-- Drop tablas en orden de dependencia:
+DROP TABLE IF EXISTS dictar;
+DROP TABLE IF EXISTS calificar;
+DROP TABLE IF EXISTS Grupo;
+DROP TABLE IF EXISTS Detalle_estudiante;
+DROP TABLE IF EXISTS Detalles_profesor;
+DROP TABLE IF EXISTS Estudiante;
+DROP TABLE IF EXISTS Profesor;
+DROP TABLE IF EXISTS Asignatura;
+DROP TABLE IF EXISTS Clasificacion;
+DROP TABLE IF EXISTS Pregrado;
 
 create table Asignatura (
                             cod_asignatura       INT8                 not null,
@@ -299,9 +281,6 @@ alter table dictar
     add constraint FK_DICTAR_GRUPO_PRO_GRUPO foreign key (cod_grupo, periodo_grupo)
         references Grupo (cod_grupo, periodo_grupo)
         on delete restrict on update restrict;
-insert into clasificacion (nom_clasificacion, max_horas_clas, sueldo_clasificacion) values
-                                                                                        ('PLANTA', 40, 3000000),
-                                                                                        ('CONTRATACION_ESPECIAL', 20, 2000000);
 
 -- Trigger para prevenir la inserción de pregrados y profesores fuera de la sede MACARENA
 CREATE OR REPLACE FUNCTION prevent_update_profesor()
@@ -358,4 +337,3 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_pregrado_update
     BEFORE INSERT OR UPDATE OR DELETE ON Pregrado
     FOR EACH ROW EXECUTE FUNCTION prevent_update_pregrado();
-
