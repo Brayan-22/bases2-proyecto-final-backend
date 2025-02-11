@@ -1,71 +1,50 @@
-drop index if exists pregrado_asignatura_FK;
+-- Eliminar triggers (dependientes)
+DROP TRIGGER IF EXISTS trigger_profesor_update ON Profesor;
+DROP TRIGGER IF EXISTS trigger_pregrado_update ON Pregrado;
 
-drop index if exists Asignatura_PK;
+-- Eliminar funciones utilizadas por triggers y Kafka
+DROP FUNCTION IF EXISTS prevent_update_profesor() CASCADE;
+DROP FUNCTION IF EXISTS prevent_update_pregrado() CASCADE;
+DROP FUNCTION IF EXISTS set_kafka_update() CASCADE;
+DROP FUNCTION IF EXISTS unset_kafka_update() CASCADE;
 
-drop table if exists Asignatura;
+-- Eliminar índices (en orden de dependencias, usando CASCADE)
+DROP INDEX IF EXISTS grupo_profesor_FK CASCADE;
+DROP INDEX IF EXISTS grupo_profesor2_FK CASCADE;
+DROP INDEX IF EXISTS dictar_PK CASCADE;
+DROP INDEX IF EXISTS estudiante_grupo2_FK CASCADE;
+DROP INDEX IF EXISTS estudiante_grupo_FK CASCADE;
+DROP INDEX IF EXISTS calificar_PK CASCADE;
+DROP INDEX IF EXISTS Profesor_PK CASCADE;
+DROP INDEX IF EXISTS profesor_clasificacion_FK CASCADE;
+DROP INDEX IF EXISTS Pregrado_PK CASCADE;
+DROP INDEX IF EXISTS Grupo_PK CASCADE;
+DROP INDEX IF EXISTS asignatura_grupo_FK CASCADE;
+DROP INDEX IF EXISTS Estudiante_PK CASCADE;
+DROP INDEX IF EXISTS pregrado_estudiante_FK CASCADE;
+DROP INDEX IF EXISTS Detalles_profesor_PK CASCADE;
+DROP INDEX IF EXISTS Detalle_estudiante_PK CASCADE;
+DROP INDEX IF EXISTS Clasificacion_PK CASCADE;
+DROP INDEX IF EXISTS Asignatura_PK CASCADE;
+DROP INDEX IF EXISTS pregrado_asignatura_FK CASCADE;
+DROP INDEX IF EXISTS nomina_profesor_FK CASCADE;
+DROP INDEX IF EXISTS nomina_profesor2_FK CASCADE;
+DROP INDEX IF EXISTS nomina_profesor_PK CASCADE;
+DROP INDEX IF EXISTS nomina_PK CASCADE;
 
-drop index if exists Clasificacion_PK;
-
-drop table if exists Clasificacion;
-
-drop index if exists Detalle_estudiante_PK;
-
-drop table if exists Detalle_estudiante;
-
-drop index if exists Detalles_profesor_PK;
-
-drop table if exists Detalles_profesor;
-
-drop index if exists pregrado_estudiante_FK;
-
-drop index if exists Estudiante_PK;
-
-drop table if exists Estudiante;
-
-drop index if exists asignatura_grupo_FK;
-
-drop index if exists Grupo_PK;
-
-drop table if exists Grupo;
-
-drop index if exists Pregrado_PK;
-
-drop table if exists Pregrado;
-
-drop index if exists profesor_clasificacion_FK;
-
-drop index if exists Profesor_PK;
-
-drop table if exists Profesor;
-
-drop index if exists estudiante_grupo2_FK;
-
-drop index if exists estudiante_grupo_FK;
-
-drop index if exists calificar_PK;
-
-drop table if exists calificar;
-
-drop index if exists grupo_profesor_FK;
-
-drop index if exists grupo_profesor2_FK;
-
-drop index if exists dictar_PK;
-
-drop table if exists dictar;
-
-drop index if exists nomina_PK;
-
-drop table if exists nomina;
-
-drop index if exists nomina_profesor_FK;
-
-drop index if exists nomina_profesor2_FK;
-
-drop index if exists nomina_profesor_PK;
-
-drop table if exists nomina_profesor;
-
+-- Eliminar tablas en orden inverso a las dependencias
+DROP TABLE IF EXISTS dictar CASCADE;
+DROP TABLE IF EXISTS calificar CASCADE;
+DROP TABLE IF EXISTS Grupo CASCADE;
+DROP TABLE IF EXISTS Detalles_profesor CASCADE;
+DROP TABLE IF EXISTS Detalle_estudiante CASCADE;
+DROP TABLE IF EXISTS Estudiante CASCADE;
+DROP TABLE IF EXISTS Profesor CASCADE;
+DROP TABLE IF EXISTS Asignatura CASCADE;
+DROP TABLE IF EXISTS Clasificacion CASCADE;
+DROP TABLE IF EXISTS Pregrado CASCADE;
+DROP TABLE IF EXISTS nomina_profesor CASCADE;
+DROP TABLE IF EXISTS nomina CASCADE;
 
 create table Asignatura (
    cod_asignatura       INT8                 not null,
