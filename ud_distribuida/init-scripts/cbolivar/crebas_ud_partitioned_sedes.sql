@@ -318,7 +318,7 @@ BEGIN
 
         -- Block if not Macarena
         IF sede_profesor <> 'CIUDADBOLIVAR' THEN
-            RAISE EXCEPTION 'No se puede modificar profesor en sede diferente a MACARENA';
+            RAISE EXCEPTION 'No se puede modificar profesor en sede diferente a CIUDADBOLIVAR';
         END IF;
         RETURN NEW;
     ELSIF TG_OP = 'DELETE' THEN
@@ -328,7 +328,7 @@ BEGIN
         WHERE cod_pregrado = OLD.cod_pregrado;
 
         IF sede_profesor <> 'CIUDADBOLIVAR' THEN
-            RAISE EXCEPTION 'No se puede eliminar profesor en sede diferente a MACARENA';
+            RAISE EXCEPTION 'No se puede eliminar profesor en sede diferente a CIUDADBOLIVAR';
         END IF;
         RETURN OLD;
     END IF;
@@ -343,13 +343,13 @@ CREATE OR REPLACE FUNCTION prevent_update_pregrado()
     RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        IF NEW.sede <> 'CBOLIVAR' THEN
-            RAISE EXCEPTION 'No se puede crear pregrado en sede diferente a MACARENA';
+        IF NEW.sede <> 'CIUDADBOLIVAR' THEN
+            RAISE EXCEPTION 'No se puede crear pregrado en sede diferente a CIUDADBOLIVAR';
         END IF;
         RETURN NEW;
     ELSIF TG_OP IN ('UPDATE', 'DELETE') THEN
         IF OLD.sede <> 'CIUDADBOLIVAR' THEN
-            RAISE EXCEPTION 'No se puede modificar pregrado en sede diferente a MACARENA';
+            RAISE EXCEPTION 'No se puede modificar pregrado en sede diferente a CIUDADBOLIVAR';
         END IF;
         RETURN (CASE TG_OP WHEN 'DELETE' THEN OLD ELSE NEW END);
     END IF;
